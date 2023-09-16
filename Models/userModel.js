@@ -13,6 +13,14 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
+  firstname: {
+    type: String,
+    required: true,
+  },
+  lastname: {
+    type: String,
+    required: true,
+  },
 });
 
 userSchema.statics.checkEmail = async function (email) {
@@ -31,7 +39,12 @@ userSchema.statics.checkEmail = async function (email) {
   return false;
 };
 
-userSchema.statics.signup = async function (email, password) {
+userSchema.statics.signup = async function (
+  email,
+  password,
+  firstname,
+  lastname
+) {
   if (!password) {
     throw Error('Please Provide a password');
   }
@@ -39,7 +52,12 @@ userSchema.statics.signup = async function (email, password) {
   const salt = await bcrypt.genSalt(10);
   const hash = await bcrypt.hash(password, salt);
 
-  const user = await this.create({ email, password: hash });
+  const user = await this.create({
+    email,
+    firstname,
+    lastname,
+    password: hash,
+  });
   return user;
 };
 
